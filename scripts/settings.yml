@@ -1,0 +1,19 @@
+preprocess:
+  data:
+    train: data/train.csv
+    test: data/test.csv
+    rename:
+      PassengerId: 01_Passagier_Id
+      Name: 02_Naam
+      Sex: 03_Geslacht
+      Age: 04_Leeftijd
+      Parch: 05_Aantal_kinderen
+      SibSp: 06_Aantal_overige_familieleden
+      Embarked: 07_Opstapplaats
+      Ticket: 08_Ticket_nummer
+      Pclass: 09_Ticket_klasse
+      Fare: 10_Ticket_prijs
+      Cabin: 11_Cabine_nummer
+      Survived: 12_Overleefd
+  
+
