@@ -15,5 +15,6 @@ preprocess:
       Fare: 10_Ticket_prijs
       Cabin: 11_Cabine_nummer
       Survived: 12_Overleefd
-  
+
+
 
