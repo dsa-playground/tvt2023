@@ -201,29 +201,16 @@ def spielerij_entry():
     return [a,b]
 
 
-def voeg_passagiers_toe(all_records):
-
+def voeg_passagiers_toe(all_records=[]):
+    
     new_record = spielerij_entry()
-    print(new_record)
+    print(f"start: {all_records}")
     if new_record[-1] in ['ja', 'j']:
-        all_records=all_records + new_record[:-1]
-        print(all_records)
-        voeg_passagiers_toe(all_records=all_records)
-    elif new_record[-1] in ['nee', 'n']:
-        all_records=all_records + new_record[:-1]
-        print(all_records)
+        all_records.append(new_record[:-1])
+        print(f"if loop: {all_records}")
+        return voeg_passagiers_toe(all_records=all_records)
+    else:
+        print(f"elif loop: {all_records}")
+        all_records.append(new_record[:-1])
+        print(f"elif loop + : {all_records}")
         return all_records
-
-# def voeg_passagiers_toe(all_records=[]):
-
-#     new_record = spielerij_entry()
-#     # print(new_record)
-#     if new_record[-1] in ['ja', 'j']:
-#         all_records.append(new_record[:-1])
-#         # print(all_records)
-#         voeg_passagiers_toe(all_records=all_records)
-#     elif new_record[-1] in ['nee', 'n']:
-#         all_records.append(new_record[:-1])
-#         # print("WTF")
-#         print(type(all_records))
-#         return all_records
