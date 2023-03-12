@@ -6,7 +6,8 @@ from pyaml_env import parse_config
 from scripts.preprocess.preprocess_load import load_csv, return_config
 from scripts.preprocess.preprocess_clean import rename_cols, change_order_cols, drop_cols, replace_values_cols, \
     floor_values_cols, fillna_cols, dropna_rows, create_index
-from scripts.preprocess.preprocess_collect import add_multiple_records
+from scripts.preprocess.preprocess_collect import add_multiple_records, transform_multiplechoice_anwser, \
+    transform_multi_records_to_df
 
 #Load settings
 config_path="../settings.yml"
@@ -73,19 +74,27 @@ def opschonen_data(df_train, df_test, config=_config):
     
     return df_train_cleaned, df_test_cleaned
 
-def voeg_passagiers_toe(df_train, df_test):
+
+def voeg_passagiers_toe(df_train, df_test, config=_config):
 
     #steps:
     # 1. Add column for 'workshop_passagiers' in both dataframes (all value 0)
     # 2. Collect new records
     # 3. Add records to both dataframes (with column 'workshop_passagiers'=1)
     
-    # df_train_added = df_train.copy()
-    # df_test_added = df_test.copy()
+    df_train_added = df_train.copy()
+    df_test_added = df_test.copy()
 
-    # df_train_added['Workshop_passagier'] = 0
-    # df_test_added['Workshop_passagier'] = 0
+    df_train_added['Workshop_passagier'] = 0
+    df_test_added['Workshop_passagier'] = 0
 
-    workshop_passagiers = add_multiple_records()
+    list_workshop_passagiers = add_multiple_records()
+    list_workshop_passagiers_updated=transform_multiplechoice_anwser(list_with_dicts=list_workshop_passagiers)
+    df_workshop_passagiers = transform_multi_records_to_df(list_with_all_new_records=list_workshop_passagiers_updated)
+    df_workshop_passagiers = (df_workshop_passagiers.pipe(replace_values_cols, dict_replacing=config['preprocess']['data']['clean']['label_encode'])
+                              .pipe(create_index, list_index_cols=config['preprocess']['data']['clean']['index_cols']))
 
-    return workshop_passagiers
+    df_train_added = pd.concat([df_train_added, df_workshop_passagiers], join="outer")
+    df_test_added = pd.concat([df_test_added, df_workshop_passagiers], join="outer")
+
+    return df_train_added, df_test_added

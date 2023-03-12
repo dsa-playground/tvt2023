@@ -116,8 +116,21 @@ def add_multiple_records(continue_key='add', all_records=[]):
         # print(f"elif loop + : {all_records}")
         return all_records
 
-def transform_multi_records_to_df(dict_multiple_records):
-    pass
+
+def transform_multiplechoice_anwser(list_with_dicts, config=_config):
+    updated_list = []
+    for item in list_with_dicts:
+        updated_dict = {**item, **config['preprocess']['data']['collect']['transform_multi'][item['multi']]}
+        updated_list.append(updated_dict)
+    return updated_list
+
+
+def transform_multi_records_to_df(list_with_all_new_records):
+    df_new_records = pd.DataFrame(list_with_all_new_records)
+    df_new_records['Passagier_Id'] = df_new_records.index+10_000
+    df_new_records['Workshop_passagier'] = 1
+    df_new_records = df_new_records.drop(columns=['multi', 'add'])
+    return df_new_records
 
 
 
