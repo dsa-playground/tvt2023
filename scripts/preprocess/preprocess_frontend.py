@@ -49,8 +49,7 @@ def opschonen_dataframe(df, config=_config):
     # 5. Fillna for certain columns
     # 6. Drop rows with NaNs
     # 7. Floor floats & astype int
-    # 8. Replace str values by numeric values (label encoding by controled replacing values)
-    # 9. Create index (for certain [non-numeric] columns)
+    # 8. Create index (for certain [non-numeric] columns)
 
     df_clean = df.copy()
     df_clean = (df_clean.pipe(rename_cols, dict_renamed_columns=config['preprocess']['data']['clean']['rename'])
@@ -60,11 +59,21 @@ def opschonen_dataframe(df, config=_config):
             .pipe(fillna_cols, dict_fillna_strategy=config['preprocess']['data']['clean']['fillna_strategy'])
             .pipe(dropna_rows)
             .pipe(floor_values_cols, list_rounding_cols=config['preprocess']['data']['clean']['floor'])
-            .pipe(replace_values_cols, dict_replacing=config['preprocess']['data']['clean']['label_encode'])
             .pipe(create_index, list_index_cols=config['preprocess']['data']['clean']['index_cols'])
             )
     
     return df_clean
+
+
+def numeriek_maken_dataframe(df, config=_config):
+    #steps to take:
+    # 1. Replace str values by numeric values (label encoding by controled replacing values)
+
+    df_num = df.copy()
+    df_num = (df_num.pipe(replace_values_cols, dict_replacing=config['preprocess']['data']['clean']['label_encode'])
+            )
+    
+    return df_num
 
 
 def opschonen_data(df_train, df_test, config=_config):
@@ -74,6 +83,13 @@ def opschonen_data(df_train, df_test, config=_config):
     
     return df_train_cleaned, df_test_cleaned
 
+
+def numeriek_maken_data(df_train_clean, df_test_clean, config=_config):
+    
+    df_train_num = numeriek_maken_dataframe(df=df_train_clean, config=config)
+    df_test_num = numeriek_maken_dataframe(df=df_test_clean, config=config)
+    
+    return df_train_num, df_test_num
 
 def voeg_passagiers_toe(df_train, df_test, config=_config):
 
