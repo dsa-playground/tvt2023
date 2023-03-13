@@ -88,8 +88,11 @@ def voeg_passagiers_toe(df_train, df_test, config=_config):
     df_train_added['Workshop_passagier'] = 0
     df_test_added['Workshop_passagier'] = 0
 
-    list_workshop_passagiers = add_multiple_records()
-    list_workshop_passagiers_updated=transform_multiplechoice_anwser(list_with_dicts=list_workshop_passagiers)
+    list_workshop_passagiers = add_multiple_records(
+        dict_with_items_to_collect=_config['preprocess']['data']['collect']['items_to_collect'])
+    list_workshop_passagiers_updated=transform_multiplechoice_anwser(
+        list_with_dicts=list_workshop_passagiers,
+        dict_with_multiplechoice_anwsers=_config['preprocess']['data']['collect']['transform_multi'])
     df_workshop_passagiers = transform_multi_records_to_df(list_with_all_new_records=list_workshop_passagiers_updated)
     df_workshop_passagiers = (df_workshop_passagiers.pipe(replace_values_cols, dict_replacing=config['preprocess']['data']['clean']['label_encode'])
                               .pipe(create_index, list_index_cols=config['preprocess']['data']['clean']['index_cols']))

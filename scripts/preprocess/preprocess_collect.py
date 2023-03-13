@@ -1,9 +1,6 @@
-import os
+# Imports
 import pandas as pd
-from pyaml_env import parse_config
-config_path="../settings.yml"
-
-_config = parse_config(os.path.abspath(os.path.join(os.path.dirname(__file__), config_path)))
+import time
 
 
 def collect_int_input(question, boundaries=[]):
@@ -24,11 +21,13 @@ def collect_int_input(question, boundaries=[]):
         Integer value collected from the user.
     """
     print(question)
+    time.sleep(1)
     found = False
 
     while not found:
         try: 
             myInt = int(input("Antwoord: "), 10)
+            # time.sleep(1)
         except Exception:
             print('Geef een geheel getal.')
             continue
@@ -65,6 +64,7 @@ def collect_str_input(question, possible_entries=[]):
         ValueError will be raised if string value is empty.
     """
     print(question)
+    time.sleep(1)
 
     possible_entries = [entry.lower() for entry in possible_entries if isinstance(entry, str)]
     found = False
@@ -72,6 +72,7 @@ def collect_str_input(question, possible_entries=[]):
     while not found:
         try: 
             myStr = input("Antwoord: ").lower()
+            # time.sleep(1)
             if not (myStr and myStr.strip()):
                 raise ValueError('Leeg veld.')
         except Exception:
@@ -87,29 +88,32 @@ def collect_str_input(question, possible_entries=[]):
           return myStr
 
 
-def add_record(config=_config):
+def add_record(dict_with_items_to_collect):
     answers = {}
-    for item in config['preprocess']['data']['collect']['items_to_collect']:
-        if config['preprocess']['data']['collect']['items_to_collect'][item]['type'] == 'str':
+    for item in dict_with_items_to_collect.keys():
+        if dict_with_items_to_collect[item]['type'] == 'str':
             answer = collect_str_input(
-                question=config['preprocess']['data']['collect']['items_to_collect'][item]['question'],
-                possible_entries=config['preprocess']['data']['collect']['items_to_collect'][item]['restriction'])
-        elif config['preprocess']['data']['collect']['items_to_collect'][item]['type'] == 'int':
+                question=dict_with_items_to_collect[item]['question'],
+                possible_entries=dict_with_items_to_collect[item]['restriction'])
+        elif dict_with_items_to_collect[item]['type'] == 'int':
             answer = collect_int_input(
-                question=config['preprocess']['data']['collect']['items_to_collect'][item]['question'],
-                boundaries=config['preprocess']['data']['collect']['items_to_collect'][item]['restriction'])
+                question=dict_with_items_to_collect[item]['question'],
+                boundaries=dict_with_items_to_collect[item]['restriction'])
         answers[item] = answer
     
     return answers
 
-def add_multiple_records(continue_key='add', all_records=[]):
 
-    new_record = add_record()
+def add_multiple_records(dict_with_items_to_collect, continue_key='add', all_records=[]):
+
+    new_record = add_record(dict_with_items_to_collect=dict_with_items_to_collect)
     # print(f"start: {all_records}")
     if new_record[continue_key] in ['ja', 'j']:
         all_records.append(new_record)
         # print(f"if loop: {all_records}")
-        return add_multiple_records(all_records=all_records)
+        return add_multiple_records(
+            dict_with_items_to_collect=dict_with_items_to_collect, 
+            all_records=all_records)
     else:
         # print(f"elif loop: {all_records}")
         all_records.append(new_record)
@@ -117,10 +121,10 @@ def add_multiple_records(continue_key='add', all_records=[]):
         return all_records
 
 
-def transform_multiplechoice_anwser(list_with_dicts, config=_config):
+def transform_multiplechoice_anwser(list_with_dicts, dict_with_multiplechoice_anwsers):
     updated_list = []
     for item in list_with_dicts:
-        updated_dict = {**item, **config['preprocess']['data']['collect']['transform_multi'][item['multi']]}
+        updated_dict = {**item, **dict_with_multiplechoice_anwsers[item['multi']]}
         updated_list.append(updated_dict)
     return updated_list
 
@@ -182,3 +186,26 @@ def transform_multi_records_to_df(list_with_all_new_records):
 #         question="Wat is je geslacht (man, vrouw, neutraal)?",
 #         possible_entries=['man', 'vrouw', 'neutraal'])
 #     return [name, sex]
+
+
+# def add_record_old(config=_config):
+#     answers = {}
+#     for item in config['preprocess']['data']['collect']['items_to_collect']:
+#         if config['preprocess']['data']['collect']['items_to_collect'][item]['type'] == 'str':
+#             answer = collect_str_input(
+#                 question=config['preprocess']['data']['collect']['items_to_collect'][item]['question'],
+#                 possible_entries=config['preprocess']['data']['collect']['items_to_collect'][item]['restriction'])
+#         elif config['preprocess']['data']['collect']['items_to_collect'][item]['type'] == 'int':
+#             answer = collect_int_input(
+#                 question=config['preprocess']['data']['collect']['items_to_collect'][item]['question'],
+#                 boundaries=config['preprocess']['data']['collect']['items_to_collect'][item]['restriction'])
+#         answers[item] = answer
+    
+#     return answers
+
+# def transform_multiplechoice_anwser_old(list_with_dicts, config=_config):
+#     updated_list = []
+#     for item in list_with_dicts:
+#         updated_dict = {**item, **config['preprocess']['data']['collect']['transform_multi'][item['multi']]}
+#         updated_list.append(updated_dict)
+#     return updated_list
