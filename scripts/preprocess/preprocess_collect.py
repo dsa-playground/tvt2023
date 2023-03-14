@@ -129,11 +129,12 @@ def transform_multiplechoice_anwser(list_with_dicts, dict_with_multiplechoice_an
     return updated_list
 
 
-def transform_multi_records_to_df(list_with_all_new_records):
+def transform_multi_records_to_df(list_with_all_new_records, list_with_drop_columns):
     df_new_records = pd.DataFrame(list_with_all_new_records)
     df_new_records['Passagier_Id'] = df_new_records.index+10_000
-    df_new_records['Workshop_passagier'] = 1
-    df_new_records = df_new_records.drop(columns=['multi', 'add'])
+    # df_new_records['Workshop_passagier'] = 1
+    df_new_records = df_new_records.drop(columns=list_with_drop_columns)
+
     return df_new_records
 
 
