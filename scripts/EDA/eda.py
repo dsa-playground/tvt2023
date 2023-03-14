@@ -1,8 +1,10 @@
 # Imports
 import pandas as pd
+import numpy as np
 import os
 import plotly.express as px
 import plotly.io as pio
+import plotly.figure_factory as ff
 
 from pyaml_env import parse_config
 
@@ -85,3 +87,44 @@ def basis_feiten(df):
     print(f"De meeste passagiers zijn opgestapt in {mode_embarked}.")
     # print(f"Er zitten {len(men)} mannen in de dataset, daarvan heeft {rate_men:.2f}% het overleefd.")
     # print(f"Er zitten {len(women)} vrouwen in de dataset, daarvan heeft {rate_women:.2f}% het overleefd.")
+
+def correlatie_heatmap(df):
+    corr = df.corr(numeric_only=True)
+    mask = np.triu(np.ones_like(corr, dtype=bool))
+
+    df_mask = corr.mask(mask)
+    df_mask = df_mask.dropna(axis=1, how='all')
+    df_mask = df_mask.dropna(axis=0, how='all')
+    df_mask = df_mask.round(2)
+
+    fig = ff.create_annotated_heatmap(z=df_mask.to_numpy(), 
+                                    x=df_mask.columns.tolist(),
+                                    y=df_mask.columns.tolist(),
+                                    colorscale=px.colors.diverging.RdBu,
+                                    font_colors=['black'],
+                                    hoverinfo="none", #Shows hoverinfo for null values
+                                    showscale=True, ygap=1, xgap=1
+                                    )
+
+    fig.update_xaxes(side="bottom")
+
+    fig.update_layout(
+        title_text='Correlatie heatmap', 
+        title_x=0.5, 
+        width=1000, 
+        height=1000,
+        xaxis_showgrid=False,
+        yaxis_showgrid=False,
+        xaxis_zeroline=False,
+        yaxis_zeroline=False,
+        yaxis_autorange='reversed',
+        template='plotly_white',
+    )
+
+    # NaN values are not handled automatically and are displayed in the figure
+    # So we need to get rid of the text manually
+    for i in range(len(fig.layout.annotations)):
+        if fig.layout.annotations[i].text == 'nan':
+            fig.layout.annotations[i].text = ""
+
+    fig.show()
