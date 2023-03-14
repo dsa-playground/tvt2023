@@ -2,130 +2,140 @@ preprocess:
   data:
     train: data/train.csv
     test: data/test.csv
-    clean:
-      rename:
-        PassengerId: Passagier_Id
-        Name: Naam
-        Sex: Geslacht
-        Age: Leeftijd
-        Parch: Aantal_kinderen
-        SibSp: Aantal_overige_familieleden
-        Embarked: Opstapplaats
-        Ticket: Ticket_nummer
-        Pclass: Ticket_klasse
-        Fare: Ticket_prijs
-        Cabin: Cabine_nummer
-        Survived: Overleefd
-      order:
-        - Passagier_Id
-        - Naam
-        - Geslacht
-        - Leeftijd
-        - Opstapplaats
-        - Aantal_kinderen
-        - Aantal_overige_familieleden
-        - Ticket_nummer
-        - Ticket_klasse
-        - Ticket_prijs
-        - Cabine_nummer
-        - Overleefd
-      drop_cols:
-        - Ticket_nummer
-        - Cabine_nummer
-      replace:
-        Geslacht:
-          male: Man
-          female: Vrouw
-        Opstapplaats:
-          C: Frankrijk
-          S: Engeland
-          Q: Ierland
-        Overleefd:
-          0: Nee
-          1: Ja
-        Ticket_klasse:
-          1: Eerste klas
-          2: Tweede klas
-          3: Derde klas
-      fillna_strategy:
-        Leeftijd: mean
-      floor:
-        - Leeftijd
-      label_encode:
-        Geslacht: 
-          man: 0
-          vrouw: 1
-        Opstapplaats:
-          Engeland: 0
-          Frankrijk: 1
-          Ierland: 2
-      index_cols:
-        - Passagier_Id
-        - Naam
-    collect:
-      items_to_collect:
-        Naam: 
-          type: str
-          question: Wat is je naam?
-          restriction:
-            - 
-        Geslacht:
-          type: str
-          question: Wat is je geslacht (man, vrouw, neutraal)?
-          restriction: 
-            - man
-            - vrouw
-            - neutraal
-        Leeftijd:
-          type: int
-          question: Wat is je leeftijd?
-          restriction: 
-            - 0
-            - 100
-        Aantal_kinderen: 
-          type: int
-          question: Hoeveel kinderen neem je mee op reis?
-          restriction: 
-            - 0
-            - 10
-        Aantal_overige_familieleden:
-          type: int
-          question: Hoeveel familieleden gaan mee op reis gaan?
-          restriction: 
-            - 0
-            - 10
-        multi:
-          type: str
-          question: |
-            Geef aan welke optie je voorkeur geniet voor de overige variabelen:
-                a. Frankrijk, 1e klasse
-                b. Engeland, 1e klasse
-                c. Ierland, 1e klasse
-          restriction:
-            - a
-            - b
-            - c
-        add:
-          type: str
-          question: Wil je nog een passagier toevoegen?
-          restriction:
-            - ja
-            - j
-            - nee
-            - n
-      transform_multi:
-        a: 
-          Opstapplaats: Engeland
-          Ticket_klasse: 1
-          Ticket_prijs: 749.99
-        b:
-          Opstapplaats: Frankrijk
-          Ticket_klasse: 2
-          Ticket_prijs: 99.99
-        c:
-          Opstapplaats: Ierland
-          Ticket_klasse: 3
-          Ticket_prijs: 7.50
+  clean:
+    rename:
+      PassengerId: Passagier_Id
+      Name: Naam
+      Sex: Geslacht
+      Age: Leeftijd
+      Parch: Aantal_kinderen
+      SibSp: Aantal_overige_familieleden
+      Embarked: Opstapplaats
+      Ticket: Ticket_nummer
+      Pclass: Ticket_klasse
+      Fare: Ticket_prijs
+      Cabin: Cabine_nummer
+      Survived: Overleefd
+    order:
+      - Passagier_Id
+      - Naam
+      - Geslacht
+      - Leeftijd
+      - Opstapplaats
+      - Aantal_kinderen
+      - Aantal_overige_familieleden
+      - Ticket_nummer
+      - Ticket_klasse
+      - Ticket_prijs
+      - Cabine_nummer
+      - Overleefd
+    add_sum_columns:
+      items: 
+        number_family:
+          colname: Aantal_familieleden
+          columns:
+            - Aantal_kinderen
+            - Aantal_overige_familieleden
+    drop_cols:
+      - Ticket_nummer
+      - Cabine_nummer
+    replace:
+      Geslacht:
+        male: Man
+        female: Vrouw
+      Opstapplaats:
+        C: Frankrijk
+        S: Engeland
+        Q: Ierland
+      Overleefd:
+        0: Nee
+        1: Ja
+      Ticket_klasse:
+        1: Eerste klas
+        2: Tweede klas
+        3: Derde klas
+    fillna_strategy:
+      Leeftijd: mean
+    floor:
+      - Leeftijd
+    label_encode:
+      Geslacht: 
+        man: 0
+        vrouw: 1
+      Opstapplaats:
+        Engeland: 0
+        Frankrijk: 1
+        Ierland: 2
+    index_cols:
+      - Passagier_Id
+      - Naam
+  collect:
+    items_to_collect:
+      Naam: 
+        type: str
+        question: Wat is je naam?
+        restriction:
+          - 
+      Geslacht:
+        type: str
+        question: Wat is je geslacht (man, vrouw, neutraal)?
+        restriction: 
+          - man
+          - vrouw
+          - neutraal
+      Leeftijd:
+        type: int
+        question: Wat is je leeftijd?
+        restriction: 
+          - 0
+          - 100
+      Aantal_kinderen: 
+        type: int
+        question: Hoeveel kinderen neem je mee op reis?
+        restriction: 
+          - 0
+          - 10
+      Aantal_overige_familieleden:
+        type: int
+        question: Hoeveel familieleden gaan mee op reis gaan?
+        restriction: 
+          - 0
+          - 10
+      multi:
+        type: str
+        question: |
+          Geef aan welke optie je voorkeur geniet voor de overige variabelen:
+              a. Frankrijk, 1e klasse
+              b. Engeland, 1e klasse
+              c. Ierland, 1e klasse
+        restriction:
+          - a
+          - b
+          - c
+      add:
+        type: str
+        question: Wil je nog een passagier toevoegen?
+        restriction:
+          - ja
+          - j
+          - nee
+          - n
+    transform_multi:
+      a: 
+        Opstapplaats: Engeland
+        Ticket_klasse: 1
+        Ticket_prijs: 749.99
+      b:
+        Opstapplaats: Frankrijk
+        Ticket_klasse: 2
+        Ticket_prijs: 99.99
+      c:
+        Opstapplaats: Ierland
+        Ticket_klasse: 3
+        Ticket_prijs: 7.50
+    drop_cols:
+     - multi
+     - add
 EDA: 
   visualisation:
     plotly_template_default: presentation
@@ -136,8 +146,11 @@ EDA:
       Overleefd: 
         - Ja 
         - Nee
-            
-      
+modeling:
+  y_variable: 'Overleefd'
+  algorithm: knn
+  filename: knn_model
+
         
         
 

@@ -26,6 +26,15 @@ def change_order_cols(df, list_order_cols):
     return df[list_order_cols]
 
 
+def add_sum_column(df, variable_name, list_columns_to_sum):
+    list_columns_to_sum = filter_isin(
+        item_to_filter=list_columns_to_sum,
+        compare_list=df.columns
+    )
+    df[variable_name]=df[list_columns_to_sum].sum(axis=1)
+    return df
+
+
 def drop_cols(df, list_drop_cols):
     list_drop_cols = filter_isin(
         item_to_filter=list_drop_cols,
