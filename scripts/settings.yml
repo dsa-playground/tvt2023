@@ -41,12 +41,19 @@ preprocess:
       - Cabine_nummer
     replace:
       Geslacht:
-        male: man
-        female: vrouw
+        male: Man
+        female: Vrouw
       Opstapplaats:
         C: Frankrijk
         S: Engeland
         Q: Ierland
+      Overleefd:
+        0: Nee
+        1: Ja
+      Ticket_klasse:
+        1: Eerste klas
+        2: Tweede klas
+        3: Derde klas
     fillna_strategy:
       Leeftijd: mean
     floor:
@@ -129,10 +136,21 @@ preprocess:
     drop_cols:
      - multi
      - add
+EDA: 
+  visualisation:
+    plotly_template_default: presentation
+    color_discrete_map: 
+      Ja: "#00A9A4"
+      Nee: "#F2C80F"
+    category_orders:
+      Overleefd: 
+        - Ja 
+        - Nee
 modeling:
   y_variable: 'Overleefd'
   algorithm: knn
   filename: knn_model
+
         
         
 
