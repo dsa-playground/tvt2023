@@ -41,8 +41,8 @@ preprocess:
       - Cabine_nummer
     replace:
       Geslacht:
-        male: Man
-        female: Vrouw
+        male: man
+        female: vrouw
       Opstapplaats:
         C: Frankrijk
         S: Engeland
@@ -66,6 +66,13 @@ preprocess:
         Engeland: 0
         Frankrijk: 1
         Ierland: 2
+      Ticket_klasse:
+        Eerste klas: 1
+        Tweede klas: 2
+        Derde klas: 3
+      Overleefd:
+        Nee: 0
+        Ja: 1
     index_cols:
       - Passagier_Id
       - Naam
@@ -123,15 +130,15 @@ preprocess:
     transform_multi:
       a: 
         Opstapplaats: Engeland
-        Ticket_klasse: 1
+        Ticket_klasse: Eerste klas
         Ticket_prijs: 749.99
       b:
         Opstapplaats: Frankrijk
-        Ticket_klasse: 2
+        Ticket_klasse: Tweede klas
         Ticket_prijs: 99.99
       c:
         Opstapplaats: Ierland
-        Ticket_klasse: 3
+        Ticket_klasse: Derde klas
         Ticket_prijs: 7.50
     drop_cols:
      - multi
