@@ -57,15 +57,37 @@ def create_scatter_plot(df,x,y,**kwargs):
     fig = px.scatter(df, x=df[x], y=df[y],**kwargs)
     fig.show() 
 
+def create_3d_scatter_plot(df,x,y,z,**kwargs):
+    fig = px.scatter_3d(df, x=x, y=y, z=z,**kwargs)
+    # Settings for (start) camera settings
+    camera = dict(
+        up=dict(x=0, y=1, z=0),
+        center=dict(x=0, y=0, z=0),
+        eye=dict(x=0, y=0, z=2.5)
+    )
+    fig.update_layout(
+        scene=dict(
+            xaxis=dict(showticklabels=False),
+            yaxis=dict(showticklabels=False),
+            zaxis=dict(showticklabels=False),
+        ),
+        scene_camera=camera
+    )
+    fig.update_traces(marker_size = 3) # changed to see multiple layers
+
+    fig.show()
+
 def create_histogram(df,x,**kwargs):
     fig = px.histogram(df, x=df[x],**kwargs).update_layout(yaxis_title="Aantal")
     fig.show() 
 
 def EDA_visualisaties(df):
-    create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_bar_plot(df=df,x="Ticket_klasse",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_bar_plot(df=df,x="Opstapplaats",color="Overleefd", facet_col="Geslacht",color_discrete_map=color_discrete_map,category_orders=category_orders)
-    create_bar_plot(df=df,x="Aantal_overige_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
+    create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
+    create_3d_scatter_plot(df=df,x="Passagier_Id", y="Leeftijd", z="Geslacht",color="Overleefd",color_discrete_map=color_discrete_map, 
+                           category_orders=category_orders,hover_data={"Passagier_Id": False})
+    create_bar_plot(df=df,x="Aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
 
 def basis_feiten(df):
     passengers = df["Overleefd"]
@@ -93,8 +115,8 @@ def correlatie_heatmap(df):
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
     df_mask = corr.mask(mask)
-    df_mask = df_mask.dropna(axis=1, how='all')
-    df_mask = df_mask.dropna(axis=0, how='all')
+    # df_mask = df_mask.dropna(axis=1, how='all')
+    # df_mask = df_mask.dropna(axis=0, how='all')
     df_mask = df_mask.round(2)
 
     fig = ff.create_annotated_heatmap(z=df_mask.to_numpy(), 
