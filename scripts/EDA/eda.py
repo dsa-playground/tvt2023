@@ -87,7 +87,7 @@ def EDA_visualisaties(df):
     create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_3d_scatter_plot(df=df,x="Passagier_Id", y="Leeftijd", z="Geslacht",color="Overleefd",color_discrete_map=color_discrete_map, 
                            category_orders=category_orders,hover_data={"Passagier_Id": False})
-    create_bar_plot(df=df,x="Aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
+    create_bar_plot(df=df,x="Totaal_aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
 
 def basis_feiten(df):
     passengers = df["Overleefd"]
