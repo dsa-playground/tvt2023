@@ -59,23 +59,21 @@ def create_scatter_plot(df,x,y,**kwargs):
 
 def create_3d_scatter_plot(df,x,y,z,**kwargs):
     fig = px.scatter_3d(df, x=x, y=y, z=z,**kwargs)
-    fig.update_layout(
-        scene=dict(
-            xaxis=dict(showticklabels=False),
-            yaxis=dict(showticklabels=False),
-            zaxis=dict(showticklabels=False),
-        )
-    )
-    fig.update_traces(marker_size = 3) # changed to see multiple layers
-
     # Settings for (start) camera settings
     camera = dict(
         up=dict(x=0, y=1, z=0),
         center=dict(x=0, y=0, z=0),
         eye=dict(x=0, y=0, z=2.5)
     )
-
-    fig.update_layout(scene_camera=camera)
+    fig.update_layout(
+        scene=dict(
+            xaxis=dict(showticklabels=False),
+            yaxis=dict(showticklabels=False),
+            zaxis=dict(showticklabels=False),
+        ),
+        scene_camera=camera
+    )
+    fig.update_traces(marker_size = 3) # changed to see multiple layers
 
     fig.show()
 
