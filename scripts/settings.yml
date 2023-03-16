@@ -16,26 +16,27 @@ preprocess:
       Fare: Ticket_prijs
       Cabin: Cabine_nummer
       Survived: Overleefd
+    add_sum_columns:
+      items: 
+        number_family:
+          colname: Totaal_aantal_familieleden
+          columns:
+            - Aantal_kinderen
+            - Aantal_overige_familieleden
     order:
       - Passagier_Id
       - Naam
       - Geslacht
       - Leeftijd
-      - Opstapplaats
       - Aantal_kinderen
       - Aantal_overige_familieleden
+      - Totaal_aantal_familieleden
+      - Opstapplaats
       - Ticket_nummer
       - Ticket_klasse
       - Ticket_prijs
       - Cabine_nummer
       - Overleefd
-    add_sum_columns:
-      items: 
-        number_family:
-          colname: Aantal_familieleden
-          columns:
-            - Aantal_kinderen
-            - Aantal_overige_familieleden
     drop_cols:
       - Ticket_nummer
       - Cabine_nummer

@@ -82,9 +82,16 @@ def basis_feiten(df):
     # men_survived = men.loc[df_train_clean["Overleefd"] == "Ja"]
     # rate_men = 100 * len(men_survived)/len(men)
 
+    # Determine missing values in %
+    percent_missing = df.isnull().sum() * 100 / len(df)
+    df_missing_value = pd.DataFrame({'Missende waarden (%)': percent_missing})
+
     print(f"Er zitten {len(passengers)} passagiers in de dataset, daarvan heeft {rate_survivors:.2f}% het overleefd.")
     print(f"De gemiddelde leeftijd van de passagiers is {average_age:.0f}.")
     print(f"De meeste passagiers zijn opgestapt in {mode_embarked}.")
+    print(f" ")
+    display(df_missing_value.sort_values(by='Missende waarden (%)', ascending=False))
+    print(f" ")
     # print(f"Er zitten {len(men)} mannen in de dataset, daarvan heeft {rate_men:.2f}% het overleefd.")
     # print(f"Er zitten {len(women)} vrouwen in de dataset, daarvan heeft {rate_women:.2f}% het overleefd.")
 
