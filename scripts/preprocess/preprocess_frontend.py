@@ -52,14 +52,23 @@ def opschonen_dataframe(df, config=_config):
     # 8. Create index (for certain [non-numeric] columns)
 
     df_clean = df.copy()
-    df_clean = (df_clean.pipe(rename_cols, dict_renamed_columns=config['preprocess']['clean']['rename'])
-            .pipe(change_order_cols, list_order_cols=config['preprocess']['clean']['order'])
-            .pipe(replace_values_cols, dict_replacing=config['preprocess']['clean']['replace'])
-            )
+    df_clean = rename_cols(df=df_clean, dict_renamed_columns=config['preprocess']['clean']['rename'])
     for item in _config['preprocess']['clean']['add_sum_columns']['items'].keys():
         df_clean = add_sum_column(df=df_clean, 
                                   variable_name=_config['preprocess']['clean']['add_sum_columns']['items'][item]['colname'], 
                                   list_columns_to_sum=_config['preprocess']['clean']['add_sum_columns']['items'][item]['columns'])
+    df_clean = (df_clean.pipe(change_order_cols, list_order_cols=config['preprocess']['clean']['order'])
+            .pipe(replace_values_cols, dict_replacing=config['preprocess']['clean']['replace'])
+            )
+
+    # df_clean = (df_clean.pipe(rename_cols, dict_renamed_columns=config['preprocess']['clean']['rename'])
+    #         .pipe(change_order_cols, list_order_cols=config['preprocess']['clean']['order'])
+    #         .pipe(replace_values_cols, dict_replacing=config['preprocess']['clean']['replace'])
+    #         )
+    # for item in _config['preprocess']['clean']['add_sum_columns']['items'].keys():
+    #     df_clean = add_sum_column(df=df_clean, 
+    #                               variable_name=_config['preprocess']['clean']['add_sum_columns']['items'][item]['colname'], 
+    #                               list_columns_to_sum=_config['preprocess']['clean']['add_sum_columns']['items'][item]['columns'])
     
     return df_clean
 
