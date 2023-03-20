@@ -73,7 +73,8 @@ def create_3d_scatter_plot(df,x,y,z,**kwargs):
         ),
         scene_camera=camera
     )
-    fig.update_traces(marker_size = 3) # changed to see multiple layers
+    fig.update_traces(marker_size = 4) # changed to see multiple layers
+    fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
 
     fig.show()
 
