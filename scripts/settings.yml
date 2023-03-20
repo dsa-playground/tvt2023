@@ -42,8 +42,8 @@ preprocess:
       - Cabine_nummer
     replace:
       Geslacht:
-        male: man
-        female: vrouw
+        male: Man
+        female: Vrouw
       Opstapplaats:
         C: Frankrijk
         S: Engeland
@@ -61,8 +61,8 @@ preprocess:
       - Leeftijd
     label_encode:
       Geslacht: 
-        man: 0
-        vrouw: 1
+        Man: 0
+        Vrouw: 1
       Opstapplaats:
         Engeland: 0
         Frankrijk: 1
@@ -105,7 +105,7 @@ preprocess:
           - 10
       Aantal_overige_familieleden:
         type: int
-        question: Hoeveel familieleden gaan mee op reis gaan?
+        question: Hoeveel andere familieleden gaan mee op reis?
         restriction: 
           - 0
           - 10
@@ -129,15 +129,15 @@ preprocess:
           - nee
           - n
     transform_multi:
-      a: 
+      A: 
         Opstapplaats: Engeland
         Ticket_klasse: Eerste klas
         Ticket_prijs: 749.99
-      b:
+      B:
         Opstapplaats: Frankrijk
         Ticket_klasse: Tweede klas
         Ticket_prijs: 99.99
-      c:
+      C:
         Opstapplaats: Ierland
         Ticket_klasse: Derde klas
         Ticket_prijs: 7.50
