@@ -36,9 +36,9 @@ def collect_int_input(question, boundaries=[]):
             if boundaries[0] <= myInt <= boundaries[1]:
                 return myInt
             elif myInt > boundaries[1]:
-                print(f"Is een cijfer van hoger dan {max} realistisch?")
+                print(f"Vul een getal in dat lager is dan {boundaries[1]}.")
             elif myInt < boundaries[0]:
-                print(f"Is een cijfer van lager dan {min} realistisch?")
+                print(f"Vul een getal in dat hoger is dan {boundaries[0]}.")
         else:
             return myInt
 
@@ -99,6 +99,7 @@ def add_record(dict_with_items_to_collect):
             answer = collect_int_input(
                 question=dict_with_items_to_collect[item]['question'],
                 boundaries=dict_with_items_to_collect[item]['restriction'])
+        print(f"Je hebt ingevuld: {answer}")
         answers[item] = answer
     
     return answers

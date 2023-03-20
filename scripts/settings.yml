@@ -42,8 +42,8 @@ preprocess:
       - Cabine_nummer
     replace:
       Geslacht:
-        male: man
-        female: vrouw
+        male: Man
+        female: Vrouw
       Opstapplaats:
         C: Frankrijk
         S: Engeland
@@ -105,7 +105,7 @@ preprocess:
           - 10
       Aantal_overige_familieleden:
         type: int
-        question: Hoeveel familieleden gaan mee op reis gaan?
+        question: Hoeveel andere familieleden gaan mee op reis?
         restriction: 
           - 0
           - 10
