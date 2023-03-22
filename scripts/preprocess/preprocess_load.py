@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def return_config(config):
-    """Returns config dictionary to view
+    """Returns config dictionary to view.
 
     Parameters
     ----------
