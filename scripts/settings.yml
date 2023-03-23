@@ -131,10 +131,10 @@ preprocess:
         type: str
         question: Wil je nog een passagier toevoegen (ja,nee)?
         restriction:
-          - ja
           - j
-          - nee
           - n
+          - ja
+          - nee
     transform_multi:
       A: 
         Ticket_klasse: Eerste klas

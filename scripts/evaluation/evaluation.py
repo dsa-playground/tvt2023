@@ -14,7 +14,20 @@ _config = parse_config(os.path.abspath(os.path.join(os.path.dirname(__file__), c
 pio.templates.default = _config["EDA"]["visualisation"]["plotly_template_default"]
 
 def calculate_feature_importance(df,config=_config):
+    """Calculate the feature importance with a RandomForestClassifier.
 
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with training data (X, y)
+    config : dict, optional
+        Dictionary with all settings, by default _config (which is loaded in this script).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with in the index the feature names and a column 'Feature_importance' with values for the feature importance.
+    """
     y_column=config['modeling']['y_variable']
     list_variables = list(set(df.columns) - set([y_column]))
 
@@ -30,7 +43,17 @@ def calculate_feature_importance(df,config=_config):
     return df_feature_importance
 
 def geef_belangrijkste_variabelen(df):
-    
+    """Visualise the feature importance as a horizontal bar plot. 
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with training data (X, y)
+
+    Returns
+    -------
+    Plotly visualisation: horizontal bar plot.
+    """
     df_feature_importance = calculate_feature_importance(df)
     
     fig = px.bar(df_feature_importance, x=df_feature_importance["Feature_importance"], y=df_feature_importance.index).update_yaxes(categoryorder="total ascending")
