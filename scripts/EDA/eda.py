@@ -25,7 +25,7 @@ def create_df_count(df,columns):
     Parameters
     ----------
     df : pd.DataFrame
-        _description_
+        DataFrame with columns to count
     columns : list(str)
         List of strings with columnnames.
 
@@ -177,7 +177,7 @@ def create_histogram(df,x,**kwargs):
 
 
 def EDA_visualisaties(df):
-    """Creates multiple Plotly visualizations for the Titanic dataset.
+    """Creates multiple Plotly visualisations for the Titanic dataset.
 
     Visualisations returned:
     1. Barplot: Count of number of passengers survived/passed away (stacked) given the ticket class.
@@ -189,7 +189,7 @@ def EDA_visualisaties(df):
     Parameters
     ----------
     df : pd.DataFrame
-        DataFrame with columns to incorporate in the visualizations.
+        DataFrame with columns to incorporate in the visualisations.
     
     Returns
     -------
@@ -203,19 +203,29 @@ def EDA_visualisaties(df):
     create_bar_plot(df=df,x="Totaal_aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
 
 def basis_feiten(df):
+    """Prints several interesting facts about the titanic dataset, including missing values.
+
+    Facts returned:
+    1. Number of passengers, including percentage that survived.  
+    2. Average age of passengers.
+    3. Place where most passengers embarked.
+    4. Number of missing values in the dataset.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the print statements.
+
+    Returns
+    -------
+    Printed facts
+    """
     passengers = df["Overleefd"]
     passengers_survived = passengers.loc[df["Overleefd"] == "Ja"]
     rate_survivors = 100 * len(passengers_survived)/len(passengers)
 
     average_age = df["Leeftijd"].mean()
     mode_embarked = df["Opstapplaats"].mode()[0]
-    # women = df_train_clean.loc[df_train_clean["Geslacht"] == 'Vrouw']
-    # women_survived = women.loc[df_train_clean["Overleefd"] == "Ja"]
-    # rate_women = 100 * len(women_survived)/len(women)
-
-    # men = df_train_clean.loc[df_train_clean["Geslacht"] == 'Man']
-    # men_survived = men.loc[df_train_clean["Overleefd"] == "Ja"]
-    # rate_men = 100 * len(men_survived)/len(men)
 
     # Determine missing values in %
     percent_missing = df.isnull().sum() * 100 / len(df)
@@ -227,16 +237,25 @@ def basis_feiten(df):
     print(f" ")
     display(df_missing_value.sort_values(by='Missende waarden (%)', ascending=False))
     print(f" ")
-    # print(f"Er zitten {len(men)} mannen in de dataset, daarvan heeft {rate_men:.2f}% het overleefd.")
-    # print(f"Er zitten {len(women)} vrouwen in de dataset, daarvan heeft {rate_women:.2f}% het overleefd.")
 
 def correlatie_heatmap(df):
+    """Shows correlation heatmap from a dataframe.
+
+    Note: only numeric columns are incorporated in the heatmap.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the correlation heatmap.
+
+    Returns
+    -------
+    Correlation heatmap visualisation.
+    """
     corr = df.corr(numeric_only=True)
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
     df_mask = corr.mask(mask)
-    # df_mask = df_mask.dropna(axis=1, how='all')
-    # df_mask = df_mask.dropna(axis=0, how='all')
     df_mask = df_mask.round(2)
 
     fig = ff.create_annotated_heatmap(z=df_mask.to_numpy(), 
