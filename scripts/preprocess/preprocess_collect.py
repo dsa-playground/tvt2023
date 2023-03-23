@@ -89,6 +89,21 @@ def collect_str_input(question, possible_entries=[]):
 
 
 def add_record(dict_with_items_to_collect):
+    """Constructs a dictionary with item-name as key and anwser as value.
+
+    Parameters
+    ----------
+    dict_with_items_to_collect : dict
+        Dictionary with a key for each item and a dictionary-value of the format (key:value):
+            - type: int/str.
+            - question: String sentence of question.
+            - restriction: list of integer/string restrictions of possible answers.
+
+    Returns
+    -------
+    dict
+        Dictionary with anwser per item requested.
+    """
     answers = {}
     for item in dict_with_items_to_collect.keys():
         if dict_with_items_to_collect[item]['type'] == 'str':
@@ -106,7 +121,25 @@ def add_record(dict_with_items_to_collect):
 
 
 def add_multiple_records(dict_with_items_to_collect, continue_key='add', all_records=[]):
+    """Constructs list of dictionaries with multiple anwsers. 
 
+    Parameters
+    ----------
+    dict_with_items_to_collect : dict
+        Dictionary with a key for each item and a dictionary-value of the format (key:value):
+            - type: int/str.
+            - question: String sentence of question.
+            - restriction: list of integer/string restrictions of possible answers.
+    continue_key : str, optional
+        String value to check in last dictionary to add new record or return current collected anwsers, by default 'add'
+    all_records : list, optional
+        Empty list by default, because of recurrent function will be build up, by default []
+
+    Returns
+    -------
+    list(dict)
+        List of dictionaries for all anwsers given.
+    """
     new_record = add_record(dict_with_items_to_collect=dict_with_items_to_collect)
     # print(f"start: {all_records}")
     if new_record[continue_key] in ['ja', 'j']:
@@ -123,6 +156,20 @@ def add_multiple_records(dict_with_items_to_collect, continue_key='add', all_rec
 
 
 def transform_multiplechoice_anwser(list_with_dicts, dict_with_multiplechoice_anwsers):
+    """Transforms multiple choice answer in multiple values of in dictionaries.
+
+    Parameters
+    ----------
+    list_with_dicts : list(dict)
+        List with dictionary of anwsers.
+    dict_with_multiplechoice_anwsers : dict(str)
+        Dict with key:value corresponding with multiple choice anwser.
+
+    Returns
+    -------
+    list(dict)
+        Corrected list of dictionaries for all anwsers given.
+    """
     updated_list = []
     for item in list_with_dicts:
         updated_dict = {**item, **dict_with_multiplechoice_anwsers[item['multi']]}
@@ -131,6 +178,20 @@ def transform_multiplechoice_anwser(list_with_dicts, dict_with_multiplechoice_an
 
 
 def transform_multi_records_to_df(list_with_all_new_records, list_with_drop_columns):
+    """Transforms list with dictionaries into Dataframe.
+
+    Parameters
+    ----------
+    list_with_all_new_records : list(dict)
+        List with dictionaries whereas each dictionary is one record of the new DataFrame
+    list_with_drop_columns : list(str)
+        List of strings with columnnames that can be dropped from the DataFrame
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame constructed from underlying dictionaries with their keys as columnnames and values as values in the records. 
+    """
     df_new_records = pd.DataFrame(list_with_all_new_records)
     df_new_records['Passagier_Id'] = df_new_records.index+10_000
     # df_new_records['Workshop_passagier'] = 1

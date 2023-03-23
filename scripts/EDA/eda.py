@@ -20,11 +20,42 @@ category_orders = _config["EDA"]["visualisation"]["category_orders"]
 # Functions
 
 def create_df_count(df,columns):
+    """Create DataFrame with counts of columns.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to count
+    columns : list(str)
+        List of strings with columnnames.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with counts of records for group of columns.
+    """
     df_count = df.groupby(columns).size().reset_index()
     df_count.columns = columns + ["Aantal"]
     return df_count
 
+
 def create_df_percentage(df,groupby_columns,percentage_column):
+    """Create DataFrame with percentages of columns based on specific 'percentage column'.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns listed in groupby_columns and percentage_column
+    groupby_columns : list(str)
+        List of columns to groupby on.
+    percentage_column : str
+        Columnname to calculate the percentage.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with the percentage of a column given the input DataFrame.
+    """
     percentage = df.groupby(groupby_columns)[percentage_column].value_counts(normalize = True)
     df_percentage = pd.DataFrame(percentage)
     df_percentage = df_percentage * 100
@@ -32,7 +63,21 @@ def create_df_percentage(df,groupby_columns,percentage_column):
     df_percentage = df_percentage.reset_index()
     return df_percentage
 
+
 def create_bar_plot(df,x,**kwargs):
+    """Creates Plotly bar plot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the bar plot
+    x : str
+        Columnname to use on the X-axis
+
+    Returns
+    -------
+    Plotly visualisation
+    """
     kwarg_optional_cols = ["color", "facet_col","facet_row"]
     
     kwarg_cols_result = set(kwarg_optional_cols) & set(list(kwargs.keys()))
@@ -53,11 +98,45 @@ def create_bar_plot(df,x,**kwargs):
         fig = px.bar(df, x=df[x], y=df["Aantal"],**kwargs)
     fig.show()
 
+
 def create_scatter_plot(df,x,y,**kwargs):
+    """Create Plotly scatter plot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the scatter plot
+    x : str
+        Columnname of the X-axis
+    y : str
+        Columnname of the Y-axis
+    
+    Returns
+    -------
+    Plotly visualisation
+    """
     fig = px.scatter(df, x=df[x], y=df[y],**kwargs)
     fig.show() 
 
+
 def create_3d_scatter_plot(df,x,y,z,**kwargs):
+    """Create Plotly 3D scatter plot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the 3D scatter plot
+    x : str
+        Columnname of the X-axis
+    y : str
+        Columnname of the Y-axis
+    z : str
+        Columnname of the Z-axis
+
+    Returns
+    -------
+    Plotly visualisation
+    """
     fig = px.scatter_3d(df, x=x, y=y, z=z,**kwargs)
     # Settings for (start) camera settings
     camera = dict(
@@ -78,11 +157,44 @@ def create_3d_scatter_plot(df,x,y,z,**kwargs):
 
     fig.show()
 
+
 def create_histogram(df,x,**kwargs):
+    """Create Plotly histogram.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the histogram.
+    x : str
+        Columnname of the X-axis
+        
+    Returns
+    -------
+    Plotly visualisation
+    """
     fig = px.histogram(df, x=df[x],**kwargs).update_layout(yaxis_title="Aantal")
     fig.show() 
 
+
 def EDA_visualisaties(df):
+    """Creates multiple Plotly visualisations for the Titanic dataset.
+
+    Visualisations returned:
+    1. Barplot: Count of number of passengers survived/passed away (stacked) given the ticket class.
+    2. Barplot: Count of the number of passengers survived/passed away (stacked) given the boarding place and gender.
+    3. Scatterplot: Scatterplot survived/passed away passengers given age (x: passenger ID, y: age, color: survived)
+    4. 3D Scatterplot: 3D scatterplot survived/passed away passengers given age and gender (x: passenger ID, y: age, z: gender, color: survived)
+    5. Barplot: Barplot of percentage of passengers survived/passed away (stacked) given the number of family members.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the visualisations.
+    
+    Returns
+    -------
+    Plotly visualisations
+    """
     create_bar_plot(df=df,x="Ticket_klasse",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_bar_plot(df=df,x="Opstapplaats",color="Overleefd", facet_col="Geslacht",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
@@ -91,19 +203,29 @@ def EDA_visualisaties(df):
     create_bar_plot(df=df,x="Totaal_aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
 
 def basis_feiten(df):
+    """Prints several interesting facts about the titanic dataset, including missing values.
+
+    Facts returned:
+    1. Number of passengers, including percentage that survived.  
+    2. Average age of passengers.
+    3. Place where most passengers embarked.
+    4. Number of missing values in the dataset.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the print statements.
+
+    Returns
+    -------
+    Printed facts
+    """
     passengers = df["Overleefd"]
     passengers_survived = passengers.loc[df["Overleefd"] == "Ja"]
     rate_survivors = 100 * len(passengers_survived)/len(passengers)
 
     average_age = df["Leeftijd"].mean()
     mode_embarked = df["Opstapplaats"].mode()[0]
-    # women = df_train_clean.loc[df_train_clean["Geslacht"] == 'Vrouw']
-    # women_survived = women.loc[df_train_clean["Overleefd"] == "Ja"]
-    # rate_women = 100 * len(women_survived)/len(women)
-
-    # men = df_train_clean.loc[df_train_clean["Geslacht"] == 'Man']
-    # men_survived = men.loc[df_train_clean["Overleefd"] == "Ja"]
-    # rate_men = 100 * len(men_survived)/len(men)
 
     # Determine missing values in %
     percent_missing = df.isnull().sum() * 100 / len(df)
@@ -115,16 +237,25 @@ def basis_feiten(df):
     print(f" ")
     display(df_missing_value.sort_values(by='Missende waarden (%)', ascending=False))
     print(f" ")
-    # print(f"Er zitten {len(men)} mannen in de dataset, daarvan heeft {rate_men:.2f}% het overleefd.")
-    # print(f"Er zitten {len(women)} vrouwen in de dataset, daarvan heeft {rate_women:.2f}% het overleefd.")
 
 def correlatie_heatmap(df):
+    """Shows correlation heatmap from a dataframe.
+
+    Note: only numeric columns are incorporated in the heatmap.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the correlation heatmap.
+
+    Returns
+    -------
+    Correlation heatmap visualisation.
+    """
     corr = df.corr(numeric_only=True)
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
     df_mask = corr.mask(mask)
-    # df_mask = df_mask.dropna(axis=1, how='all')
-    # df_mask = df_mask.dropna(axis=0, how='all')
     df_mask = df_mask.round(2)
 
     fig = ff.create_annotated_heatmap(z=df_mask.to_numpy(), 
