@@ -159,6 +159,8 @@ EDA:
       Overleefd: 
         - Ja 
         - Nee
+    plot_width:
+      900
 modeling:
   y_variable: 'Overleefd'
   algorithm: knn

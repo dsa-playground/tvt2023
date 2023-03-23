@@ -16,6 +16,7 @@ _config = parse_config(os.path.abspath(os.path.join(os.path.dirname(__file__), c
 pio.templates.default = _config["EDA"]["visualisation"]["plotly_template_default"]
 color_discrete_map= _config["EDA"]["visualisation"]["color_discrete_map"]
 category_orders = _config["EDA"]["visualisation"]["category_orders"]
+width = _config["EDA"]["visualisation"]["plot_width"]
 
 # Functions
 
@@ -175,32 +176,82 @@ def create_histogram(df,x,**kwargs):
     fig = px.histogram(df, x=df[x],**kwargs).update_layout(yaxis_title="Aantal")
     fig.show() 
 
-
-def EDA_visualisaties(df):
-    """Creates multiple Plotly visualisations for the Titanic dataset.
-
-    Visualisations returned:
-    1. Barplot: Count of number of passengers survived/passed away (stacked) given the ticket class.
-    2. Barplot: Count of the number of passengers survived/passed away (stacked) given the boarding place and gender.
-    3. Scatterplot: Scatterplot survived/passed away passengers given age (x: passenger ID, y: age, color: survived)
-    4. 3D Scatterplot: 3D scatterplot survived/passed away passengers given age and gender (x: passenger ID, y: age, z: gender, color: survived)
-    5. Barplot: Barplot of percentage of passengers survived/passed away (stacked) given the number of family members.
+def visualisatie_ticketklasse(df):
+    """Create Barplot of number of passengers survived/passed away (stacked) given the ticket class.
 
     Parameters
     ----------
     df : pd.DataFrame
-        DataFrame with columns to incorporate in the visualisations.
+        DataFrame with columns to incorporate in the histogram.
     
     Returns
     -------
-    Plotly visualisations
+    Plotly visualisation
     """
-    create_bar_plot(df=df,x="Ticket_klasse",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
-    create_bar_plot(df=df,x="Opstapplaats",color="Overleefd", facet_col="Geslacht",color_discrete_map=color_discrete_map,category_orders=category_orders)
-    create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
+    print("Het aantal overleefde/overleden passagiers ten opzichte van ticketklasse.")
+    create_bar_plot(df=df,x="Ticket_klasse",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders,width=width,
+                    )
+
+def visualisatie_opstapplaats(df):
+    """Create Barplot of the number of passengers survived/passed away (stacked) given the boarding place and gender.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the histogram.
+    
+    Returns
+    -------
+    Plotly visualisation
+    """
+    print("Het aantal overleefde/overleden passagiers ten opzichte van opstapplaats en geslacht.")
+    create_bar_plot(df=df,x="Opstapplaats",color="Overleefd", facet_col="Geslacht",color_discrete_map=color_discrete_map,category_orders=category_orders,width=width)
+                    
+def visualisatie_leeftijd(df):
+    """Create Scatterplot of survived/passed away passengers given age.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the histogram.
+    
+    Returns
+    -------
+    Plotly visualisation
+    """   
+    print("Scatterplot van de overleefde/overleden passagiers ten opzichte van leeftijd.")
+    create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders,width=width)
+
+def visualisatie_leeftijd_geslacht(df):
+    """Create 3D Scatterplot of survived/passed away passengers given age and gender.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the histogram.
+    
+    Returns
+    -------
+    Plotly visualisation
+    """    
+    print("3D scatterplot van de overleefde/overleden passagiers ten opzichte van leeftijd en geslacht.")
     create_3d_scatter_plot(df=df,x="Passagier_Id", y="Leeftijd", z="Geslacht",color="Overleefd",color_discrete_map=color_discrete_map, 
-                           category_orders=category_orders,hover_data={"Passagier_Id": False})
-    create_bar_plot(df=df,x="Totaal_aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
+                           category_orders=category_orders,hover_data={"Passagier_Id": False},width=width)
+
+def visualisatie_familieleden(df):
+    """Create Barplot of percentage of passengers survived/passed away (stacked) given the number of family members.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the histogram.
+    
+    Returns
+    -------
+    Plotly visualisation
+    """
+    print("Het percentage overleefde/overleden passagiers ten opzichte van het aantal familieleden.")
+    create_bar_plot(df=df,x="Totaal_aantal_familieleden", percentage="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders,width=width)
 
 def basis_feiten(df):
     """Prints several interesting facts about the titanic dataset, including missing values.
