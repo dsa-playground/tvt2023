@@ -1,10 +1,10 @@
  ###### Requirements without Version Specifiers ######
-pyaml-env
 plotly
 black
 pandas
 rise
 statsmodels
 scikit-learn
+pyaml-env
 
 ###### Requirements with Version Specifiers ######
