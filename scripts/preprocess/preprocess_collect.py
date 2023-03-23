@@ -142,7 +142,7 @@ def add_multiple_records(dict_with_items_to_collect, continue_key='add', all_rec
     """
     new_record = add_record(dict_with_items_to_collect=dict_with_items_to_collect)
     # print(f"start: {all_records}")
-    if new_record[continue_key] in ['ja', 'j', 'Ja', 'J']:
+    if new_record[continue_key].lower() in ['ja', 'j']:
         all_records.append(new_record)
         # print(f"if loop: {all_records}")
         return add_multiple_records(
