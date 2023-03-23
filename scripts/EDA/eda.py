@@ -20,11 +20,42 @@ category_orders = _config["EDA"]["visualisation"]["category_orders"]
 # Functions
 
 def create_df_count(df,columns):
+    """Create DataFrame with counts of columns.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        _description_
+    columns : list(str)
+        List of strings with columnnames.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with counts of records for group of columns.
+    """
     df_count = df.groupby(columns).size().reset_index()
     df_count.columns = columns + ["Aantal"]
     return df_count
 
+
 def create_df_percentage(df,groupby_columns,percentage_column):
+    """Create DataFrame with percentages of columns based on specific 'percentage column'.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns listed in groupby_columns and percentage_column
+    groupby_columns : list(str)
+        List of columns to groupby on.
+    percentage_column : str
+        Columnname to calculate the percentage.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with the percentage of a column given the input DataFrame.
+    """
     percentage = df.groupby(groupby_columns)[percentage_column].value_counts(normalize = True)
     df_percentage = pd.DataFrame(percentage)
     df_percentage = df_percentage * 100
@@ -32,7 +63,21 @@ def create_df_percentage(df,groupby_columns,percentage_column):
     df_percentage = df_percentage.reset_index()
     return df_percentage
 
+
 def create_bar_plot(df,x,**kwargs):
+    """Creates Plotly bar plot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the bar plot
+    x : str
+        Columnname to use on the X-axis
+
+    Returns
+    -------
+    Plotly visualisation
+    """
     kwarg_optional_cols = ["color", "facet_col","facet_row"]
     
     kwarg_cols_result = set(kwarg_optional_cols) & set(list(kwargs.keys()))
@@ -53,11 +98,45 @@ def create_bar_plot(df,x,**kwargs):
         fig = px.bar(df, x=df[x], y=df["Aantal"],**kwargs)
     fig.show()
 
+
 def create_scatter_plot(df,x,y,**kwargs):
+    """Create Plotly scatter plot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the scatter plot
+    x : str
+        Columnname of the X-axis
+    y : str
+        Columnname of the Y-axis
+    
+    Returns
+    -------
+    Plotly visualisation
+    """
     fig = px.scatter(df, x=df[x], y=df[y],**kwargs)
     fig.show() 
 
+
 def create_3d_scatter_plot(df,x,y,z,**kwargs):
+    """Create Plotly 3D scatter plot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the 3D scatter plot
+    x : str
+        Columnname of the X-axis
+    y : str
+        Columnname of the Y-axis
+    z : str
+        Columnname of the Z-axis
+
+    Returns
+    -------
+    Plotly visualisation
+    """
     fig = px.scatter_3d(df, x=x, y=y, z=z,**kwargs)
     # Settings for (start) camera settings
     camera = dict(
@@ -78,11 +157,44 @@ def create_3d_scatter_plot(df,x,y,z,**kwargs):
 
     fig.show()
 
+
 def create_histogram(df,x,**kwargs):
+    """Create Plotly histogram.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the histogram.
+    x : str
+        Columnname of the X-axis
+        
+    Returns
+    -------
+    Plotly visualisation
+    """
     fig = px.histogram(df, x=df[x],**kwargs).update_layout(yaxis_title="Aantal")
     fig.show() 
 
+
 def EDA_visualisaties(df):
+    """Creates multiple Plotly visualizations for the Titanic dataset.
+
+    Visualisations returned:
+    1. Barplot: Count of number of passengers survived/passed away (stacked) given the ticket class.
+    2. Barplot: Count of the number of passengers survived/passed away (stacked) given the boarding place and gender.
+    3. Scatterplot: Scatterplot survived/passed away passengers given age (x: passenger ID, y: age, color: survived)
+    4. 3D Scatterplot: 3D scatterplot survived/passed away passengers given age and gender (x: passenger ID, y: age, z: gender, color: survived)
+    5. Barplot: Barplot of percentage of passengers survived/passed away (stacked) given the number of family members.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns to incorporate in the visualizations.
+    
+    Returns
+    -------
+    Plotly visualisations
+    """
     create_bar_plot(df=df,x="Ticket_klasse",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_bar_plot(df=df,x="Opstapplaats",color="Overleefd", facet_col="Geslacht",color_discrete_map=color_discrete_map,category_orders=category_orders)
     create_scatter_plot(df=df,x="Passagier_Id",y="Leeftijd",color="Overleefd",color_discrete_map=color_discrete_map,category_orders=category_orders)

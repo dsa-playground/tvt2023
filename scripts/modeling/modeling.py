@@ -14,7 +14,7 @@ def train_knn_model(X_train,y_train, k):
     X_train : {array-like, sparse matrix} of shape (n_samples, n_features)
         Training data.  
     y_train : array-like of shape (n_samples,) or (n_samples, n_targets)
-        Target values. Will be cast to X’s dtype if necessary.
+        Target values. Will be cast to X's dtype if necessary.
     k : int, default=5
         Number of neighbors to use by default for kneighbors queries.
 
@@ -45,6 +45,7 @@ def calc_accuracy_score(y_test, yhat):
     """
     return accuracy_score(y_test,yhat)
 
+
 def calc_confusion_matrix(y_test, yhat):
     """Calculated the confusion matrix.
 
@@ -64,7 +65,7 @@ def calc_confusion_matrix(y_test, yhat):
     
 
 def knn_experiment_with_range_for_k(X_train, y_train, X_test, y_test, lower_boundary_range, upper_boundary_range):
-    """Experiments a number of knn models given a range of neighbors.
+    """Experiments a number of KNN models given a range of neighbors.
     This function requires a train_test_split to be done before!
 
     Parameters
@@ -72,7 +73,7 @@ def knn_experiment_with_range_for_k(X_train, y_train, X_test, y_test, lower_boun
     X_train : {array-like, sparse matrix} of shape (n_samples, n_features)
         Training data.  
     y_train : array-like of shape (n_samples,) or (n_samples, n_targets)
-        Target values. Will be cast to X’s dtype if necessary.
+        Target values. Will be cast to X's dtype if necessary.
     X_train : {array-like, sparse matrix} of shape (n_samples, n_features)
         Test data.  
     y_test : array-like of shape (n_samples,) or (n_samples, n_targets)
@@ -99,7 +100,7 @@ def knn_experiment_with_range_for_k(X_train, y_train, X_test, y_test, lower_boun
 
 
 def knn_experiment(df, y_column, lower_boundary_range, upper_boundary_range):
-    """Experiments a number of knn models given a range of neighbors.
+    """Experiments a number of KNN models given a range of neighbors.
     This function includes a train_test_split!
 
     Parameters
@@ -126,7 +127,26 @@ def knn_experiment(df, y_column, lower_boundary_range, upper_boundary_range):
     df_accuracy_score = knn_experiment_with_range_for_k(X_train, y_train, X_test, y_test, lower_boundary_range, upper_boundary_range)
     return df_accuracy_score
 
-def knn_with_specific_neighbour(df, k, y_column):
+
+def knn_with_specific_neighbor(df, k, y_column):
+    """Train KNN model with specific neighbor and return model AND confusion matrix.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataset to split into train and test dataset
+    k : int, default=5
+        Number of neighbors to use by default for kneighbors queries.
+    y_column : str
+        Name of the target variable.
+
+    Returns
+    -------
+    sklearn model
+        KNeighborsClassifier model
+    pd.DataFrame
+        Confusion matrix as a DataFrame.
+    """
     # Train_test_split
     list_variables = [e for e in df.columns if e not in [y_column]]
     X=df[list_variables]
@@ -140,7 +160,25 @@ def knn_with_specific_neighbour(df, k, y_column):
     return knn, df_confusion
 
 
-def find_best_number_neighbours(X_train, y_train, X_test, y_test):
+def find_best_number_neighbors(X_train, y_train, X_test, y_test):
+    """Finds best number of neighbors in a range of 0,20.
+
+    Parameters
+    ----------
+    X_train : {array-like, sparse matrix} of shape (n_samples, n_features)
+        Training data.  
+    y_train : array-like of shape (n_samples,) or (n_samples, n_targets)
+        Target values. Will be cast to X's dtype if necessary.
+    X_train : {array-like, sparse matrix} of shape (n_samples, n_features)
+        Test data.  
+    y_test : array-like of shape (n_samples,) or (n_samples, n_targets)
+        Target values as given in test dataset to compare with.
+
+    Returns
+    -------
+    int
+        Number of neighbors that is fitted best according to the accuracy score.
+    """
     acc = []
 
     for i in range(1,20):
@@ -155,6 +193,20 @@ def find_best_number_neighbours(X_train, y_train, X_test, y_test):
 
 
 def create_knn_model(df, y_column):
+    """Trains a KNN model with the best possible neighbors in a range of 0 to 20.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataset to split into train and test dataset
+    y_column : str
+        Name of the target variable.
+
+    Returns
+    -------
+    sklearn model
+        KNeighborsClassifier model
+    """
     
     # Train_test_split
     # list_variables = list(set(df.columns) - set([y_column]))
@@ -174,12 +226,33 @@ def create_knn_model(df, y_column):
 
 
 def save_model2pickle(model, default_filename):
+    """Saves model in pickle format to folder 'models' in this project.
+
+    Parameters
+    ----------
+    model : sklearn model
+        Trained model of sklearn.
+    default_filename : str
+        Filename for model.
+    """
     # save the model to disk
     filename = f'models/{default_filename}.sav'
     pickle.dump(model, open(filename, 'wb'))
 
 
 def load_model_from_pickle(default_filename):
+    """Loads pickle file with trained model. 
+
+    Parameters
+    ----------
+    default_filename : str
+        Filename for model.
+
+    Returns
+    -------
+    sklearn model
+        Trained model of sklearn.
+    """
     filename = f'models/{default_filename}.sav'
     loaded_model = pickle.load(open(filename, 'rb'))
     return loaded_model
