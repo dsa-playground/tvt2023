@@ -119,7 +119,7 @@ preprocess:
       multi:
         type: str
         question: |
-          Geef aan welke optie je voorkeur geniet voor de overige variabelen:
+          Geef aan welke optie je voorkeur geniet voor de overige variabelen (a, b, c):
               a. 1e klasse ticket (prijs 749.99)
               b. 2e klasse ticket (prijs 99.99)
               c. 3e klasse ticket (prijs 7.50)
