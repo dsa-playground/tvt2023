@@ -2,3 +2,4 @@
 
 Used dataset: 'Titanic'
 Language: Dutch
+Rating: 5 of 5 stars
