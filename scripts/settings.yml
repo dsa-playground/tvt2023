@@ -86,11 +86,10 @@ preprocess:
           - 
       Geslacht:
         type: str
-        question: Wat is je geslacht (man, vrouw, neutraal)?
+        question: Wat is je geslacht (man, vrouw)?
         restriction: 
           - man
           - vrouw
-          - neutraal
       Leeftijd:
         type: int
         question: Wat is je leeftijd?

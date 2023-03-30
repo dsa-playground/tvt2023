@@ -182,7 +182,7 @@ def find_best_number_neighbors(X_train, y_train, X_test, y_test):
     acc = []
 
     for i in range(1,20):
-        train_knn_model(X_train, y_train, k=i)
+        knn = train_knn_model(X_train, y_train, k=i)
         yhat = knn.predict(X_test)
         acc.append(accuracy_score(y_test,yhat))
         print(f"For k = {i} : {accuracy_score(y_test,yhat)}")
@@ -216,7 +216,7 @@ def create_knn_model(df, y_column):
     X_train, X_test, y_train, y_test = train_test_split(X, y,
         test_size = 0.2, random_state=1)
     # Find best number of neighbours
-    best_k = find_best_number_neighbours(X_train, y_train, X_test, y_test)
+    best_k = find_best_number_neighbors(X_train, y_train, X_test, y_test)
 
     # Fit model
     knn = KNeighborsClassifier(n_neighbors = best_k)
