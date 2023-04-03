@@ -52,9 +52,9 @@ preprocess:
         0: Nee
         1: Ja
       Ticket_klasse:
-        1: Eerste klas
-        2: Tweede klas
-        3: Derde klas
+        1: 1e klas
+        2: 2e klas
+        3: 3e klas
     fillna_strategy:
       Leeftijd: mean
     floor:
@@ -68,9 +68,9 @@ preprocess:
         Frankrijk: 1
         Ierland: 2
       Ticket_klasse:
-        Eerste klas: 1
-        Tweede klas: 2
-        Derde klas: 3
+        1e klas: 1
+        2e klas: 2
+        3e klas: 3
       Overleefd:
         Nee: 0
         Ja: 1
@@ -136,13 +136,13 @@ preprocess:
           - nee
     transform_multi:
       A: 
-        Ticket_klasse: Eerste klas
+        Ticket_klasse: 1e klas
         Ticket_prijs: 749.99
       B:
-        Ticket_klasse: Tweede klas
+        Ticket_klasse: 2e klas
         Ticket_prijs: 99.99
       C:
-        Ticket_klasse: Derde klas
+        Ticket_klasse: 3e klas
         Ticket_prijs: 7.50
     drop_cols:
      - multi
